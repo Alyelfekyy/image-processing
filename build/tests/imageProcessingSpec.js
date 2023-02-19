@@ -39,47 +39,40 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
 var path_1 = __importDefault(require("path"));
-var fs_1 = require("fs");
-var __1 = require("..");
 var imgHelper_1 = require("../imageHelper/imgHelper");
-var middlewares_1 = require("../middlewares/middlewares");
-//console.log(__dirname)
-var imageprocessing = (0, express_1.default)();
-var middlewares = [
-    middlewares_1.checkvalues,
-    middlewares_1.imagenotExistMiddleware,
-    middlewares_1.imagealreadyExistMiddleware,
-];
-imageprocessing.get('/', middlewares, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var name, width, height, input, output, resizedImage, error_1;
+var index_1 = require("../index");
+var filesystem_1 = require("../utilities/filesystem");
+describe('Image Processing Functionalities Test', function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                name = req.query.name;
-                width = parseInt(req.query.width);
-                height = parseInt(req.query.height);
-                input = path_1.default.join(__1.srcFolder, "/images/original/".concat(name, ".jpg"));
-                output = path_1.default.join(__1.srcFolder, "/images/resized/".concat(name, "-").concat(width, "x").concat(height, ".jpg"));
-                console.log(output);
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 4, , 5]);
-                return [4 /*yield*/, (0, imgHelper_1.resizeImage)(input, height, width)];
-            case 2:
-                resizedImage = _a.sent();
-                return [4 /*yield*/, fs_1.promises.writeFile(output, resizedImage)];
-            case 3:
-                _a.sent();
-                return [2 /*return*/, res.status(201).sendFile(output)];
-            case 4:
-                error_1 = _a.sent();
-                console.log(error_1);
-                res.status(500).json({ error: 'message' });
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
-        }
+        it('should create thumbnail image and save it in resized folder ', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var input;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        input = path_1.default.join(index_1.srcFolder, "/images/original/dog.jpg");
+                        return [4 /*yield*/, (0, imgHelper_1.resizeImage)(input, 400, 400)];
+                    case 1:
+                        _a.sent();
+                        expect((0, filesystem_1.thumbnailExists)('dog-400x400')).toBe(true);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        return [2 /*return*/];
     });
 }); });
-exports.default = imageprocessing;
+describe('File System Functionalities Test', function () {
+    it('should read all images in images folder and return array of images names and has dog img', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var imagesArr;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, (0, filesystem_1.listImages)()];
+                case 1:
+                    imagesArr = _a.sent();
+                    expect(imagesArr).toContain('dog.jpg');
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+});

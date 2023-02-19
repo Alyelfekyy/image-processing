@@ -36,7 +36,7 @@ imageprocessing.get(
         try {
             const resizedImage = await resizeImage(input, height, width)
             await fsPromises.writeFile(output, resizedImage)
-            return res.status(200).sendFile(output)
+            return res.status(201).sendFile(output)
         } catch (error) {
             console.log(error)
             res.status(500).json({ error: 'message' })

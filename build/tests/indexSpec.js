@@ -39,40 +39,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var path_1 = __importDefault(require("path"));
-var imgHelper_1 = require("../imageHelper/imgHelper");
+var supertest_1 = __importDefault(require("supertest"));
 var index_1 = require("../index");
-var filesystem_1 = require("../utilities/filesystem");
-describe('Image Processing Functionalities Test', function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        it('should create thumbnail image and save it in resized folder ', function () { return __awaiter(void 0, void 0, void 0, function () {
-            var input;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        input = path_1.default.join(index_1.srcFolder, "/images/original/dog.jpg");
-                        return [4 /*yield*/, (0, imgHelper_1.resizeImage)(input, 400, 400)];
-                    case 1:
-                        _a.sent();
-                        expect((0, filesystem_1.thumbnailExists)('dog-400x400')).toBe(true);
-                        return [2 /*return*/];
-                }
-            });
-        }); });
-        describe('File System Functionalities Test', function () {
-            it('should read all images in images folder and return array of images names and has dog img', function () { return __awaiter(void 0, void 0, void 0, function () {
-                var imagesArr;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, (0, filesystem_1.listImages)()];
-                        case 1:
-                            imagesArr = _a.sent();
-                            expect(imagesArr).toContain('dog.jpg');
-                            return [2 /*return*/];
-                    }
-                });
-            }); });
+// supertest request object
+var request = (0, supertest_1.default)(index_1.app);
+describe('Test Endpoint Response', function () {
+    it('should return 200 status code when enter / endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.statusCode).toEqual(200);
+                    return [2 /*return*/];
+            }
         });
-        return [2 /*return*/];
-    });
-}); });
+    }); });
+    it('should resize the dog image and create the new one returned status code should be 201', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/imageprocessing?name=dog&width=800&height=100')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.statusCode).toBe(201);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should return 404 status code image not found', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/images?filename=myphoto')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.statusCode).toBe(404);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+});

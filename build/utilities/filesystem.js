@@ -44,6 +44,7 @@ var promises_1 = require("fs/promises");
 var fs_1 = require("fs");
 var path_1 = __importDefault(require("path"));
 var thumbnailPath = path_1.default.join(__dirname, '..', 'images', 'resized');
+console.log(thumbnailPath);
 var thumbnailExists = function (imageName, extension) {
     if (extension === void 0) { extension = 'jpg'; }
     var filePath = path_1.default.join(thumbnailPath, "".concat(imageName, ".").concat(extension));

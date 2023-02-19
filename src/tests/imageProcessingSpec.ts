@@ -9,11 +9,10 @@ describe('Image Processing Functionalities Test', async () => {
         await resizeImage(input, 400, 400)
         expect(thumbnailExists('dog-400x400')).toBe(true)
     })
-
-    describe('File System Functionalities Test', () => {
-        it('should read all images in images folder and return array of images names and has dog img', async () => {
-            const imagesArr = await listImages()
-            expect(imagesArr).toContain('dog.jpg')
-        })
+})
+describe('File System Functionalities Test', () => {
+    it('should read all images in images folder and return array of images names and has dog img', async () => {
+        const imagesArr = await listImages()
+        expect(imagesArr).toContain('dog.jpg')
     })
 })

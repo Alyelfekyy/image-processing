@@ -3,11 +3,15 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "jasmine": "jasmine",
+        "test": "npm run build && npm run jasmine",
         "lint": "eslint --ext .ts",
+        "clean": "rimraf build/",
+        "copy-files": "copyfiles -u 1 -a true src/images/** build/",
+        "build": "npm run clean && tsc && npm run copy-files",
         "prettify": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
-        "build": "npx tsc",
-        "start": "nodemon src/index.ts"
+        "start": "npm run build && node build/index.js",
+        "dev": "nodemon src/index.ts ",
+        "jasmine": "jasmine"
     },
     "author": "",
     "license": "ISC",
